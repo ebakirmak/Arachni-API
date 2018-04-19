@@ -13,3 +13,9 @@ C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\bin\Debug\Newtonsoft.Json.
 C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\obj\Debug\Arachni.csproj.CopyComplete
 C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\obj\Debug\Arachni.dll
 C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\obj\Debug\Arachni.pdb
+C:\Users\emreakirmak\Desktop\Arachni-API\Arachni\obj\Debug\Arachni.csproj.CoreCompileInputs.cache
+C:\Users\emreakirmak\Desktop\Arachni-API\Arachni\obj\Debug\Arachni.dll
+C:\Users\emreakirmak\Desktop\Arachni-API\Arachni\obj\Debug\Arachni.pdb
+C:\Users\emreakirmak\Desktop\Arachni-API\Arachni\bin\Debug\Arachni.dll
+C:\Users\emreakirmak\Desktop\Arachni-API\Arachni\bin\Debug\Arachni.pdb
+C:\Users\emreakirmak\Desktop\Arachni-API\Arachni\obj\Debug\Arachni.csprojResolveAssemblyReference.cache

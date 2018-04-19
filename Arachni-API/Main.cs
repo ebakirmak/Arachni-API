@@ -14,23 +14,33 @@ namespace Arachni_API
 {
     public partial class Main : Form
     {
+        private ArachniSession session;
+
+        private ArachniManager manager;
         public Main()
         {
+            using (session = new ArachniSession("206.189.12.255", 443))
+            {
+                using (manager = new ArachniManager(session))
+                {
+                  
+                }
+            }
             InitializeComponent();
         }
 
         private  void Main_Load(object sender, EventArgs e)
         {
-            using (ArachniSession session = new ArachniSession("206.189.12.255", 443))
-            {
-                using (ArachniManager manager = new ArachniManager(session))
-                {
-                    Scan scan = new Scan();
-                    MessageBox.Show(scan.GETScanID(manager).ToString());
-                }
-            }
+          
         }
 
-        
+        private void btnScans_Click(object sender, EventArgs e)
+        {
+            ScanBL scan = new ScanBL();
+            foreach (string id in scan.GETScanID(manager))
+            {
+                lstScansID.Items.Add(id);
+            }
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -19,27 +18,43 @@ namespace Arachni
 
         private int ServerPort { get; set;}
 
-        public ArachniSession(string host, int port)
-        {
-            this.IPAddress = IPAddress.Parse(host);
-            this.ServerPort = port;
-        }
+        private HttpClient Client;
 
-        public ArachniSession(string username, string password, string host, int port)
+        /*
+         * Yetkilendirme olmadan giriş yapılır.
+         * UnAuthenticate 
+         */
+        public ArachniSession(string ip, int port)
+        {
+            this.IPAddress = IPAddress.Parse(ip);
+            this.ServerPort = port;
+            this.Client = new HttpClient();
+        }
+        
+        /*
+         * Yetkilendirme yaparak giriş yapılır.
+         * 
+         */
+        public ArachniSession(string username, string password, string ip, int port)
         {
             this.Username = username;
             this.Password = password;
-            this.IPAddress = IPAddress.Parse(host);
+            this.IPAddress = IPAddress.Parse(ip);
             this.ServerPort = port;
-        }
+
+            
+            
+            }
 
         /*
          * Servisin çalışıp çalışmadığını gösterir.
          * 
          */
-        public bool ArachniServiceState()
+        public bool ArachniServiceState(string ip, int port)
         {
-            if (true)
+            HttpResponseMessage response = Client.GetAsync("http://" + ip + ":" + port+"/scans").Result;
+            //HttpContent content = response.Content;
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 return true;
             }
@@ -47,12 +62,16 @@ namespace Arachni
                 return false;
         }
 
+
         /*
          * Authenticate durumunu gösterir.
          * 
          */ 
         public bool Authenticate()
         {
+            this.Client = new HttpClient();
+            var byteArray = Encoding.ASCII.GetBytes("ebakirmak:1234");
+            Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
             if (true)
             {
                 return true;
@@ -90,10 +109,10 @@ namespace Arachni
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    string url = "http://" + ip + ":" + port + command;
-                    var response = client.GetAsync(url).Result;
+                
+                    Uri url = new Uri("http://" + ip + ":" + port + command);
+                    Client.BaseAddress = url;
+                    var response = Client.GetAsync(url).Result;
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -102,10 +121,14 @@ namespace Arachni
                         // by calling .Result you are synchronously reading the result
                         string responseString = responseContent.ReadAsStringAsync().Result;
 
-                        Console.WriteLine(responseString);
+                        //Console.WriteLine(responseString);
                         return responseString;
                     }
-                }
+                    else if(response.StatusCode== HttpStatusCode.Unauthorized)
+                    {
+                        return "Unauthorized";
+                    }
+                
 
                 return null;
             }
@@ -118,7 +141,7 @@ namespace Arachni
 
         public void Dispose()
         {
-           
+            //throw new NotImplementedException();
         }
     }
 }
