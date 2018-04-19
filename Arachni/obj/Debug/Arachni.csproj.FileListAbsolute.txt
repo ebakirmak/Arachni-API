@@ -1,0 +1,15 @@
+C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\obj\Debug\Arachni.csprojResolveAssemblyReference.cache
+C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\obj\Debug\Arachni.csproj.CoreCompileInputs.cache
+C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\bin\Debug\Arachni.dll
+C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\bin\Debug\Arachni.pdb
+C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\bin\Debug\Microsoft.Threading.Tasks.dll
+C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.dll
+C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\bin\Debug\Microsoft.Threading.Tasks.Extensions.dll
+C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\bin\Debug\Newtonsoft.Json.dll
+C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\bin\Debug\Microsoft.Threading.Tasks.xml
+C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\bin\Debug\Microsoft.Threading.Tasks.Extensions.xml
+C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.xml
+C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\bin\Debug\Newtonsoft.Json.xml
+C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\obj\Debug\Arachni.csproj.CopyComplete
+C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\obj\Debug\Arachni.dll
+C:\Users\emreakirmak\source\repos\Arachni-API\Arachni\obj\Debug\Arachni.pdb
