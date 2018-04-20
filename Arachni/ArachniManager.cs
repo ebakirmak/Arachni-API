@@ -24,7 +24,7 @@ namespace Arachni
          */
         public string GetScans()
         {
-            return  Session.ExecuteCommand("/scans");
+            return  Session.GetExecuteCommand("/scans");
             
         }
 
@@ -34,7 +34,7 @@ namespace Arachni
          */
          public string GetScanMonitor(string id)
         {
-            return Session.ExecuteCommand("/scans/" + id);
+            return Session.GetExecuteCommand("/scans/" + id);
         }
 
 
@@ -50,7 +50,7 @@ namespace Arachni
          */
          public string GetScanSummary(string id)
         {
-            return Session.ExecuteCommand("/scans/" + id+ "/summary");
+            return Session.GetExecuteCommand("/scans/" + id+ "/summary");
         }
 
         /*
@@ -59,9 +59,27 @@ namespace Arachni
          */
          public string GetScanReport(string id,string type)
         {
-            return Session.ExecuteCommand("/scans/" + id + "/report." + type);
+            return Session.GetExecuteCommand("/scans/" + id + "/report." + type);
         }
 
+        /*
+         * Bu fonksiyon yeni bir tarama oluşturulmasını sağlar.         
+         * 
+         */
+         public string SetScanCreate(string json)
+        {
+
+            return Session.POSTExecuteCommand("/scans",json);
+        }
+
+        /*
+         * Servisin çalışıp çalışmadığını kontrol eder.
+         * 
+         */
+         public bool GetServiceControl()
+        {
+            return Session.ArachniServiceState();
+        }
         public void Dispose()
         {
             //throw new NotImplementedException();

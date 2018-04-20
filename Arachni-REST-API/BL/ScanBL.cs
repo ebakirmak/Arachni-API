@@ -70,7 +70,7 @@ namespace Arachni_API.BL
          * Gelen Scan ID'leri JSON'dan ayırarak ListScan'a ekler.
          * 
          */
-        public List<string> GETScanID(ArachniManager manager)
+        public List<string> ScanID(ArachniManager manager)
         {
             try
             {
@@ -135,11 +135,43 @@ namespace Arachni_API.BL
          * 
          * Retrieve a scan report
          */
-        public string ScanReport(ArachniManager manager,string id)
+        public ScanReportDL ScanReport(ArachniManager manager,string id)
         {
             
-            ScanMonitorDL scanDL = JsonConvert.DeserializeObject<ScanMonitorDL>(manager.GetScanReport(id,"json"));
-            return null;
+            ScanReportDL scanReportDL = JsonConvert.DeserializeObject<ScanReportDL>(manager.GetScanReport(id,"json"));
+            
+            return scanReportDL;
+        }
+
+        /*
+         * Tarama Raporunu Json'a çevirir ve kaydeder. Masaüstüne.
+         * 
+         */
+         public bool ScanReportToJson(ArachniManager manager, ScanReportDL scan)
+        {
+            string json = JsonConvert.SerializeObject(scan);
+            //Tarama raporunu kaydet..
+            return true;
+        }
+
+        /*
+         * Yeni bir Scan Oluşturur.
+         * 
+         */ 
+         public string CreateScan(ArachniManager manager, ScanCreateDL scan)
+        {
+            string json = JsonConvert.SerializeObject(scan);
+            string id = manager.SetScanCreate(json);
+            return id;
+        }
+
+        /*
+         * Servisin çalışıp çalışmadığını kontrol eder.
+         * 
+         */
+        public bool ServiceControl(ArachniManager manager)
+        {
+            return manager.GetServiceControl();
         }
     }
 }

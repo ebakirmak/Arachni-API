@@ -24,12 +24,21 @@ namespace Arachni_REST_API
                     {
                         Console.Write("A - Raporları Göster\n" +
                             "B - Yeni Scan Oluştur\n" +
+                            "C - Servisi Kontrol Et\n" +
                             "Lütfen yapmak istediğiniz işlemi seçiniz: ");
                         string selectedProcess = Console.ReadLine();
 
                         if (selectedProcess == "A")
                         {
                             GetScanID(manager);
+                        }
+                        else if (selectedProcess == "B")
+                        {
+                            CreateScan(manager);
+                        }
+                        else if (selectedProcess == "C")
+                        {
+                            ServiceControl(manager);
                         }
                         Console.WriteLine("\n");
                     } while (true);
@@ -38,13 +47,56 @@ namespace Arachni_REST_API
         }
 
         /*
+         * Yeni bir Scan Yaratma
+         * 
+         */
+         private static void CreateScan(ArachniManager manager)
+        {
+
+            if (!Scan.ServiceControl(manager))
+            {
+                Console.WriteLine("Servis Çalışmıyor.");
+                return;
+            }
+
+            do
+            {
+                Console.Write("URL Giriniz: ");
+                string url = Console.ReadLine();
+                if (ControlURL(url))
+                {
+                    ScanCreateDL scanCreate = new ScanCreateDL(url, "*");
+                    Console.WriteLine(Scan.CreateScan(manager, scanCreate));
+                    break;
+                }
+                else
+                    Console.WriteLine("URL hatalı. Kontrol edin ve Tekrar giriniz.");
+            } while (true);
+        }
+        /*
+         * URL Kontrol Etme
+         * 
+         */
+         private static bool ControlURL(string url)
+        {
+            Uri uriResult;
+            bool result = Uri.TryCreate(url, UriKind.Absolute, out uriResult)
+                && uriResult.Scheme == Uri.UriSchemeHttp;
+            if (result)
+                return true;
+            else
+                return false;
+        }
+      
+
+        /*
          * Tarama işlemlerinde yapılacak işlemler.
          * 
          */
         private static void GetScanID(ArachniManager manager)
         {
            
-            List<string> listScanIDs = Scan.GETScanID(manager);
+            List<string> listScanIDs = Scan.ScanID(manager);
             if (listScanIDs != null)
             {
                 int i = 0;
@@ -57,6 +109,7 @@ namespace Arachni_REST_API
                 Console.Write("A - Taramayı İzle (Monitor)\n" +
                               "B - Tarama Özeti\n" +
                               "C - Tarama Raporu\n");
+                Console.Write("İstediğiniz Rapor Tipini Giriniz: ");
                 string selectedProcess = Console.ReadLine();
 
                 switch (selectedProcess)
@@ -67,11 +120,19 @@ namespace Arachni_REST_API
                     case "B":
                         GetScanSummary(manager, id);
                         break;
+                    case "C":
+                        GetScanReport(manager, id);
+                        break;
                     default:
                         break;
 
                 }
 
+            }
+            else if(listScanIDs.Count == 0)
+            {
+                Console.WriteLine("Tarama bulunamadı...");
+                return;
             }
             else
             {
@@ -90,13 +151,26 @@ namespace Arachni_REST_API
             bool state = false;
             do
             {
-                int taskID = Convert.ToInt32(Console.ReadLine());
-                if (listScanIDs.Count >= taskID)
+                try
                 {
-                    return listScanIDs[taskID - 1];                    
+                    int taskID = Convert.ToInt32(Console.ReadLine());
+                    if (listScanIDs.Count >= taskID)
+                    {
+                        return listScanIDs[taskID - 1];
+                    }
+                    Console.Write("Seçiminizi kontrol ediniz. Hangi Taramayı Görüntülemek İstiyorsunuz? : ");               
                 }
-                Console.Write("Seçiminizi kontrol ediniz. Hangi Taramayı Görüntülemek İstiyorsunuz? : ");
+                catch (FormatException)
+                {
+                    Console.Write("Hatalı Giriş. Tekrar Deneyiniz.");
+                }
+                catch  (Exception ex)
+                {
+                    throw ex;
+                }
+
             } while (state == false);
+
 
             return "0";
         }
@@ -120,10 +194,40 @@ namespace Arachni_REST_API
          private static void GetScanSummary(ArachniManager manager,string scanID)
         {
             ScanSummaryDL scanResponse = Scan.ScanSummary(manager, scanID);
+            Console.WriteLine(  "\nStatus: " + scanResponse.Status
+                               +"\nBusy: " + scanResponse.Busy);
 
         }
 
+        /*
+         * İlgili Taramanın Raporunu getirir.
+         * 
+         */
+         private static void GetScanReport(ArachniManager manager,string scanID)
+        {
 
+            ScanReportDL scanReportDL = Scan.ScanReport(manager, scanID);
+            Console.WriteLine("Start Date Time: " + scanReportDL.StartDatetime
+                             +"\nFinish Date Time: " + scanReportDL.FinishDatetime);
+            foreach (var item in scanReportDL.Issues)
+            {
+                Console.WriteLine("\nIssue: " + item.Name + " - Severity: " + item.Severity);
+            }
+            Scan.ScanReportToJson(manager, scanReportDL);
+
+        }
+
+        /*
+         * Servisin çalışıp çalışmadığını kontrol eder.
+         * 
+         */
+         private static void ServiceControl(ArachniManager manager)
+        {
+            if (Scan.ServiceControl(manager))
+                Console.WriteLine("Servis çalışıyor.");
+            else
+                Console.WriteLine("Servis çalışmıyor.");
+        }
     }
 
 }

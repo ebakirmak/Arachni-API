@@ -46,8 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BL\ScanBL.cs" />
-    <Compile Include="DL\ScanDL.cs" />
+    <Compile Include="DL\ScanCreateDL.cs" />
     <Compile Include="DL\ScanMonitorDL.cs" />
+    <Compile Include="DL\ScanReportDL.cs" />
     <Compile Include="DL\ScanSummaryDL.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

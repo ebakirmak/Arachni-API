@@ -41,78 +41,138 @@ namespace Arachni
             this.Password = password;
             this.IPAddress = IPAddress.Parse(ip);
             this.ServerPort = port;
-
-            
-            
-            }
+        }   
 
         /*
-         * Servisin çalışıp çalışmadığını gösterir.
-         * 
-         */
-        public bool ArachniServiceState(string ip, int port)
-        {
-            HttpResponseMessage response = Client.GetAsync("http://" + ip + ":" + port+"/scans").Result;
-            //HttpContent content = response.Content;
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                return true;
-            }
-            else
-                return false;
-        }
-
-
-        /*
-         * Authenticate durumunu gösterir.
+         * HttpClient Authenticate eder.
          * 
          */ 
         public bool Authenticate()
         {
-            this.Client = new HttpClient();
-            var byteArray = Encoding.ASCII.GetBytes("ebakirmak:1234");
-            Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-            if (true)
+            try
             {
+                this.Client = new HttpClient();
+                var byteArray = Encoding.ASCII.GetBytes("ebakirmak:1234");
+                Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                 return true;
             }
-            else
+            catch (Exception ex)
+            {
+                Console.WriteLine("ArachniSession::Authenticate " + ex.Message);
                 return false;
+            }           
+         
+        }
+       
+        /*
+         * Servisin çalışıp çalışmadığını gösterir.
+         * 
+         */
+        public bool ArachniServiceState()
+        {
+            try
+            {
+                if (Authenticate())
+                {
+
+                    Uri serviceUrl = new Uri("http://" + this.IPAddress + ":" + this.ServerPort + "/scans");
+                    Client.BaseAddress = serviceUrl;
+                    var response = Client.GetAsync(serviceUrl).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return true;
+                    }
+                    else if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        return false;
+                    }
+                    return false;
+                }
+                else
+                    return false;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ArachniSession::ArachniServiceState " + ex.Message);
+                return false;
+            }
+            
+        }
+
+
+        /*
+         * Arachni servisinde istenilen komutu çalıştırır.
+         * 
+         */
+        public string GetExecuteCommand(string command)
+        {
+            try
+            {
+                if (Authenticate())
+                {
+                    string response = GETTaskAsync(this.IPAddress, this.ServerPort.ToString(), command);
+                    return response;
+
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine("ArachniSession::GetExecuteCommand" + ex.Message);
+                return null;
+            }
+          
+                
         }
 
         /*
          * Arachni servisinde istenilen komutu çalıştırır.
          * 
          */ 
-        public string ExecuteCommand(string command)
+        public string POSTExecuteCommand(string command,string json)
         {
-            if (Authenticate())
+            try
             {
-                string response = GETTaskAsync(this.IPAddress, this.ServerPort.ToString(), command);
-                return response;
-               
+                if (Authenticate())
+                {
+
+                    string response = POSTTaskAsync(this.IPAddress, this.ServerPort.ToString(), command, json);
+                    return response;
+                }
+
+                else
+                {
+                    return null;
+                }
             }
-            else
+            catch (Exception ex)
             {
+                Console.WriteLine("ArachniSession::POSTExecuteCommand " + ex.Message);
                 return null;
             }
-                
+          
         }
 
 
 
         /*
-         * HttpClient
+         * HttpClient GET 
          * 
          */
-        private string GETTaskAsync(IPAddress ip, string port, string command)
+        private string GETTaskAsync(IPAddress serviceHost, string servicePort, string command)
         {
             try
             {
                 
-                    Uri url = new Uri("http://" + ip + ":" + port + command);
-                    Client.BaseAddress = url;
-                    var response = Client.GetAsync(url).Result;
+                    Uri serviceUrl = new Uri("http://" + serviceHost + ":" + servicePort + command);
+                    Client.BaseAddress = serviceUrl;
+                    var response = Client.GetAsync(serviceUrl).Result;
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -124,11 +184,47 @@ namespace Arachni
                         //Console.WriteLine(responseString);
                         return responseString;
                     }
-                    else if(response.StatusCode== HttpStatusCode.Unauthorized)
-                    {
-                        return "Unauthorized";
-                    }
+                   
                 
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+
+        /*
+         * HttpClient POST
+         * 
+         */
+        private string POSTTaskAsync(IPAddress serviceHost, string servicePort, string command,string json)
+        {
+            try
+            {
+
+                var jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                Uri serviceUrl = new Uri("http://" + serviceHost + ":" + servicePort + command);
+                Client.BaseAddress = serviceUrl;
+          
+                var response = Client.PostAsync(serviceUrl,jsonContent).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = response.Content;
+
+                    // by calling .Result you are synchronously reading the result
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+
+                    //Console.WriteLine(responseString);
+                    return responseString;
+                }
+             
+
 
                 return null;
             }
