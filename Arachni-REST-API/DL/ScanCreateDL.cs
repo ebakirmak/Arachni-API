@@ -15,8 +15,14 @@ namespace Arachni_REST_API.DL
             public ScanCreateDL(string url, string checks)
             {
                 this.Url = url;
-                this.Checks = new string[1];
-                this.Checks[0] = checks;            
+                this.Checks = new string[checks.Split(',').Count()];
+                int counter = 0;
+                foreach (var item in checks.Split(','))
+                {
+                    this.Checks[counter] = item;
+                    counter++;
+                }
+                       
             }
             [JsonProperty("url")]
             public string Url { get; set; }

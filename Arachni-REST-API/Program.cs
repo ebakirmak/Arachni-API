@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Arachni_REST_API
@@ -65,14 +66,103 @@ namespace Arachni_REST_API
                 string url = Console.ReadLine();
                 if (ControlURL(url))
                 {
-                    ScanCreateDL scanCreate = new ScanCreateDL(url, "*");
+                    string checks="";
+                    do
+                    {
+                        checks = ListAndSelectCheck();
+                    } while (checks=="");
+
+                    ScanCreateDL scanCreate = new ScanCreateDL(url,checks);                   
                     Console.WriteLine(Scan.CreateScan(manager, scanCreate));
-                    break;
+                    do
+                    {
+                        //Summary
+                    } while (true);
+                    
                 }
                 else
                     Console.WriteLine("URL hatalı. Kontrol edin ve Tekrar giriniz.");
             } while (true);
         }
+
+        /*
+         * Checks (Policy) Listeleme ve Seçne
+         * 
+         */
+         private static string ListAndSelectCheck()
+        {
+            // İlgili Check'leri geri dönen değişken
+            string returnChecks = "";
+            // Sistemde bulunan Check Listesini sakladığımız değilken.
+            List<String> ListChecks = Scan.ListChecks();
+            //Checkleri ekrana yazdırıyoruz.
+            byte counter = 1;
+            foreach (var item in ListChecks)
+            {
+                Console.WriteLine(counter + "- " + item);
+                counter += 1;
+            }
+            try
+            {
+                //Kullanıcıdan kontrol etmesini istediği check listesini alıyoruz.
+                Console.WriteLine("1 - " + ListChecks.Count + " Arası Sayı Giriniz veya tekli sayı giriniz. Örnek: 1-10,15,50-61. Tüm taramaları gerçekleştirmek için '*' giriniz.");
+                string checks = Console.ReadLine();
+
+                string[] checksArray = checks.Split(',');
+                foreach (var checksItem in checksArray)
+                {
+                    string[] checksNumber = checksItem.Split('-');
+                    if (checksNumber.Count() == 1)
+                    {
+                        if (returnChecks == "" && checksNumber[0] != "*")
+                            returnChecks += ListChecks[Convert.ToInt32(checksNumber[0]) - 1];
+                        else if (checksNumber[0] == "*")
+                        {
+                            returnChecks = "*";
+                            return returnChecks;
+                        }
+
+                        else
+                            returnChecks += "," + ListChecks[Convert.ToInt32(checksNumber[0]) - 1];
+                    }
+                    else if (checksNumber.Count() == 2)
+                    {
+                        for (int i = Convert.ToInt32(checksNumber[0]) - 1; i <= Convert.ToInt32(checksNumber[1]) - 1; i++)
+                        {
+                            if (returnChecks == "")
+                                returnChecks += ListChecks[Convert.ToInt32(i)];
+                            else
+                                returnChecks += "," + ListChecks[Convert.ToInt32(i)];
+                        }
+                    }
+                }
+                return returnChecks;
+            }
+            catch (FormatException formatException)
+            {
+                Console.WriteLine("İlgili Alana yalnız sayı ve - ile , girebilirsiniz. Tekrar deneyiniz.");
+                Console.WriteLine(formatException.Message);
+                Thread.Sleep(4000);
+                return "";
+            }
+            catch(ArgumentOutOfRangeException argumentOutOfRangeException)
+            {
+                Console.WriteLine("Geçersiz bir aralık girdiniz. Aralığı kontrol edip tekrar giriş yapınız.");
+                Console.WriteLine(argumentOutOfRangeException.Message);
+                Thread.Sleep(4000);
+                return "";
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+         
+          
+           
+          
+            
+        }
+
         /*
          * URL Kontrol Etme
          * 
@@ -183,6 +273,7 @@ namespace Arachni_REST_API
         {        
 
             ScanMonitorDL scanResponse = Scan.ScanMonitor(manager, scanID);
+
             Console.WriteLine("\nStatus: " + scanResponse.Status+
                               "\nBusy: "   + scanResponse.Busy);
         }
@@ -213,7 +304,7 @@ namespace Arachni_REST_API
             {
                 Console.WriteLine("\nIssue: " + item.Name + " - Severity: " + item.Severity);
             }
-            Scan.ScanReportToJson(manager, scanReportDL);
+            
 
         }
 
