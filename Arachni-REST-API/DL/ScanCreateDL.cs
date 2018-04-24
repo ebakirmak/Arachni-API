@@ -24,6 +24,8 @@ namespace Arachni_REST_API.DL
                 }
                        
             }
+
+
             [JsonProperty("url")]
             public string Url { get; set; }
 

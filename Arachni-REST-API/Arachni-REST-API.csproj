@@ -45,11 +45,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BL\ChecksBL.cs" />
     <Compile Include="BL\ScanBL.cs" />
+    <Compile Include="BL\ScanMonitorBL.cs" />
+    <Compile Include="BL\ScanReportBL.cs" />
+    <Compile Include="BL\ScanSummaryBL.cs" />
     <Compile Include="DL\ScanCreateDL.cs" />
+    <Compile Include="DL\ScanCreateResponseDL.cs" />
     <Compile Include="DL\ScanMonitorDL.cs" />
     <Compile Include="DL\ScanReportDL.cs" />
     <Compile Include="DL\ScanSummaryDL.cs" />
+    <Compile Include="PL\ScanMonitorPL.cs" />
+    <Compile Include="PL\ScanPL.cs" />
+    <Compile Include="PL\ScanReportPL.cs" />
+    <Compile Include="PL\ScanSummaryPL.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -66,8 +75,6 @@
       <Name>Arachni</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="PL\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

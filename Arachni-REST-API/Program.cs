@@ -1,6 +1,7 @@
 ﻿using Arachni;
 using Arachni_API.BL;
 using Arachni_REST_API.DL;
+using Arachni_REST_API.PL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,147 +48,30 @@ namespace Arachni_REST_API
             }            
         }
 
+    
         /*
-         * Yeni bir Scan Yaratma
+         * Tarama Oluşturma
          * 
-         */
-         private static void CreateScan(ArachniManager manager)
+         */ 
+        private static void CreateScan(ArachniManager manager)
         {
+            ScanPL scanPL = new ScanPL();
+            scanPL.CreateScan(manager);
+        }  
 
-            if (!Scan.ServiceControl(manager))
-            {
-                Console.WriteLine("Servis Çalışmıyor.");
-                return;
-            }
+        /*-------------------------------------------------------------------------------------------------------------*/
 
-            do
-            {
-                Console.Write("URL Giriniz: ");
-                string url = Console.ReadLine();
-                if (ControlURL(url))
-                {
-                    string checks="";
-                    do
-                    {
-                        checks = ListAndSelectCheck();
-                    } while (checks=="");
 
-                    ScanCreateDL scanCreate = new ScanCreateDL(url,checks);                   
-                    Console.WriteLine(Scan.CreateScan(manager, scanCreate));
-                    do
-                    {
-                        //Summary
-                    } while (true);
-                    
-                }
-                else
-                    Console.WriteLine("URL hatalı. Kontrol edin ve Tekrar giriniz.");
-            } while (true);
-        }
 
         /*
-         * Checks (Policy) Listeleme ve Seçne
-         * 
-         */
-         private static string ListAndSelectCheck()
-        {
-            // İlgili Check'leri geri dönen değişken
-            string returnChecks = "";
-            // Sistemde bulunan Check Listesini sakladığımız değilken.
-            List<String> ListChecks = Scan.ListChecks();
-            //Checkleri ekrana yazdırıyoruz.
-            byte counter = 1;
-            foreach (var item in ListChecks)
-            {
-                Console.WriteLine(counter + "- " + item);
-                counter += 1;
-            }
-            try
-            {
-                //Kullanıcıdan kontrol etmesini istediği check listesini alıyoruz.
-                Console.WriteLine("1 - " + ListChecks.Count + " Arası Sayı Giriniz veya tekli sayı giriniz. Örnek: 1-10,15,50-61. Tüm taramaları gerçekleştirmek için '*' giriniz.");
-                string checks = Console.ReadLine();
-
-                string[] checksArray = checks.Split(',');
-                foreach (var checksItem in checksArray)
-                {
-                    string[] checksNumber = checksItem.Split('-');
-                    if (checksNumber.Count() == 1)
-                    {
-                        if (returnChecks == "" && checksNumber[0] != "*")
-                            returnChecks += ListChecks[Convert.ToInt32(checksNumber[0]) - 1];
-                        else if (checksNumber[0] == "*")
-                        {
-                            returnChecks = "*";
-                            return returnChecks;
-                        }
-
-                        else
-                            returnChecks += "," + ListChecks[Convert.ToInt32(checksNumber[0]) - 1];
-                    }
-                    else if (checksNumber.Count() == 2)
-                    {
-                        for (int i = Convert.ToInt32(checksNumber[0]) - 1; i <= Convert.ToInt32(checksNumber[1]) - 1; i++)
-                        {
-                            if (returnChecks == "")
-                                returnChecks += ListChecks[Convert.ToInt32(i)];
-                            else
-                                returnChecks += "," + ListChecks[Convert.ToInt32(i)];
-                        }
-                    }
-                }
-                return returnChecks;
-            }
-            catch (FormatException formatException)
-            {
-                Console.WriteLine("İlgili Alana yalnız sayı ve - ile , girebilirsiniz. Tekrar deneyiniz.");
-                Console.WriteLine(formatException.Message);
-                Thread.Sleep(4000);
-                return "";
-            }
-            catch(ArgumentOutOfRangeException argumentOutOfRangeException)
-            {
-                Console.WriteLine("Geçersiz bir aralık girdiniz. Aralığı kontrol edip tekrar giriş yapınız.");
-                Console.WriteLine(argumentOutOfRangeException.Message);
-                Thread.Sleep(4000);
-                return "";
-            }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
-         
-          
-           
-          
-            
-        }
-
-        /*
-         * URL Kontrol Etme
-         * 
-         */
-         private static bool ControlURL(string url)
-        {
-            Uri uriResult;
-            bool result = Uri.TryCreate(url, UriKind.Absolute, out uriResult)
-                && uriResult.Scheme == Uri.UriSchemeHttp;
-            if (result)
-                return true;
-            else
-                return false;
-        }
-      
-
-        /*
-         * Tarama işlemlerinde yapılacak işlemler.
+         * İlgili taramada yapılacak işlemler.
          * 
          */
         private static void GetScanID(ArachniManager manager)
         {
            
             List<string> listScanIDs = Scan.ScanID(manager);
-            if (listScanIDs != null)
+            if (listScanIDs != null && listScanIDs.Count > 0)
             {
                 int i = 0;
                 foreach (var item in listScanIDs)
@@ -234,6 +118,10 @@ namespace Arachni_REST_API
         }
 
 
+        /*
+         * Tarama Seçme İşlemi
+         * 
+         */
         private static string SelectScan(List<string> listScanIDs)
         {
             Console.Write("Hangi Taramayı Görüntülemek İstiyorsunuz? : ");
@@ -248,13 +136,13 @@ namespace Arachni_REST_API
                     {
                         return listScanIDs[taskID - 1];
                     }
-                    Console.Write("Seçiminizi kontrol ediniz. Hangi Taramayı Görüntülemek İstiyorsunuz? : ");               
+                    Console.Write("Seçiminizi kontrol ediniz. Hangi Taramayı Görüntülemek İstiyorsunuz? : ");
                 }
                 catch (FormatException)
                 {
                     Console.Write("Hatalı Giriş. Tekrar Deneyiniz.");
                 }
-                catch  (Exception ex)
+                catch (Exception ex)
                 {
                     throw ex;
                 }
@@ -266,53 +154,45 @@ namespace Arachni_REST_API
         }
 
         /*
-         * İlgili Taramayı monitor eder / izler.
+         * Tarama Raporu Getir
          * 
          */
-         private static void GetScanMonitor(ArachniManager manager, string scanID)
-        {        
-
-            ScanMonitorDL scanResponse = Scan.ScanMonitor(manager, scanID);
-
-            Console.WriteLine("\nStatus: " + scanResponse.Status+
-                              "\nBusy: "   + scanResponse.Busy);
+        private static void GetScanReport(ArachniManager manager, string id)
+        {
+            ScanReportPL scanReportPL = new ScanReportPL();
+            scanReportPL.GetScanReport(manager, id);
         }
 
         /*
-         * İlgili Taramanın Özetini getirir.
+         * Tarama Özeti Getir
          * 
          */
-         private static void GetScanSummary(ArachniManager manager,string scanID)
+        private static void GetScanSummary(ArachniManager manager, string id)
         {
-            ScanSummaryDL scanResponse = Scan.ScanSummary(manager, scanID);
-            Console.WriteLine(  "\nStatus: " + scanResponse.Status
-                               +"\nBusy: " + scanResponse.Busy);
-
+            ScanSummaryPL scanSummaryPL = new ScanSummaryPL();
+            scanSummaryPL.GetScanSummary(manager, id);
         }
 
         /*
-         * İlgili Taramanın Raporunu getirir.
+         * Tarama İzle
          * 
          */
-         private static void GetScanReport(ArachniManager manager,string scanID)
+        private static void GetScanMonitor(ArachniManager manager, string id)
         {
-
-            ScanReportDL scanReportDL = Scan.ScanReport(manager, scanID);
-            Console.WriteLine("Start Date Time: " + scanReportDL.StartDatetime
-                             +"\nFinish Date Time: " + scanReportDL.FinishDatetime);
-            foreach (var item in scanReportDL.Issues)
-            {
-                Console.WriteLine("\nIssue: " + item.Name + " - Severity: " + item.Severity);
-            }
-            
-
+            ScanMonitorPL scanMonitorPL = new ScanMonitorPL();
+            scanMonitorPL.GetScanMonitor(manager, id);
         }
 
+
+        
+      /*------------------------------------------------------------------------------------------------*/  
+        
+        
         /*
          * Servisin çalışıp çalışmadığını kontrol eder.
          * 
          */
-         private static void ServiceControl(ArachniManager manager)
+        private static void ServiceControl(ArachniManager manager)
         {
             if (Scan.ServiceControl(manager))
                 Console.WriteLine("Servis çalışıyor.");
