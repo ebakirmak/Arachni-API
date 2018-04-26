@@ -63,6 +63,43 @@ namespace Arachni_REST_API.PL
             } while (true);
         }
 
+        /*
+         * Scan Duraklatma
+         * 
+         */
+         public void PauseScan(ArachniManager manager, string id)
+        {
+          
+            if (manager.PUTPauseScan(id)=="true")
+                Console.WriteLine("Tarama durduruldu.");
+            else
+                Console.WriteLine("Tarama durdurulamadı.");
+        }
+
+        /*
+         * Scan Başlatma
+         * 
+         */
+         public void ResumeScan(ArachniManager manager, string id)
+        {
+            if (manager.PUTPauseScan(id) == "true")
+                Console.WriteLine("Tarama Başlatıldı.");
+            else
+                Console.WriteLine("Tarama Başlatılamadı.");
+        }
+
+        /*
+         * Scan Silme
+         * 
+         */
+        public void AbortScan(ArachniManager manager, string id)
+        {
+            if (manager.DELETEAbortScan(id) == "true")
+                Console.WriteLine("Tarama Silindi.");
+            else
+                Console.WriteLine("Tarama Silinemedi.");
+        }
+
 
         /*
          * URL Kontrol Etme
@@ -101,7 +138,7 @@ namespace Arachni_REST_API.PL
             try
             {
                 //Kullanıcıdan kontrol etmesini istediği check listesini alıyoruz.
-                Console.WriteLine("1 - " + ListChecks.Count + " Arası Sayı Giriniz veya tekli sayı giriniz. Örnek: 1-10,15,50-61. Tüm taramaları gerçekleştirmek için '*' giriniz.");
+                Console.WriteLine("1 - " + ListChecks.Count + " Arası Sayı Giriniz veya tekli sayı giriniz. Örnek: 1-10,15,50-61.\n Tüm taramaları gerçekleştirmek için '*' giriniz.");
                 string checks = Console.ReadLine();
 
                 string[] checksArray = checks.Split(',');
@@ -154,6 +191,9 @@ namespace Arachni_REST_API.PL
             }
 
         }
+
+
+      
 
     }
 }

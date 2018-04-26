@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Security;
+using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,36 +44,50 @@ namespace Arachni
             this.Password = password;
             this.IPAddress = IPAddress.Parse(ip);
             this.ServerPort = port;
-        }   
+        }
 
         /*
-         * SSL Sertifika
+         * HttpClient SSL Sertifikası ile bağlanır (verilerin şifreli iletimi için) ve
+         * ilgili sunucuda username ve parola ile basit yetkilendirme (Basic Authhentication) işlemi yapılır. (Çözümü araştırılıyor.)
+         * 
+         * 
+         */      
+
+        //public bool AuthenticateSSL()
+        //{
+        //    try
+        //    {  
+        //        // The path to the certificate.
+        //        string Certificate = @"C:\Users\emreakirmak\Desktop\key\arachnicertificate.p12";
+
+        //        WebRequestHandler handler = new WebRequestHandler();
+        //        handler.ClientCertificates.Add(new X509Certificate(Certificate, "*0209*1903"));
+        //        handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+             
+
+
+        //        this.Client = new HttpClient(handler);
+                
+        //        var byteArray = Encoding.ASCII.GetBytes("ebakirmak:1234");
+        //        Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+        //        return true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("ArachniSession::Authenticate " + ex.Message);
+        //        return false;
+        //    }
+
+        //}
+     
+
+
+
+
+        /*
+         * HttpClient ilgili sunucuda username ve parola ile basit yetkilendirme (Basic Authentication) işlemi yapılır.
          * 
          */
-        // public ArachniSession(string username,string password, string ip, int port)
-        //{
-        //    //Do webrequest to get info on secure site
-        //    HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://mail.google.com");
-        //    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-        //    response.Close();
-
-        //    //retrieve the ssl cert and assign it to an X509Certificate object
-        //    X509Certificate cert = request.ServicePoint.Certificate;
-
-        //    //convert the X509Certificate to an X509Certificate2 object by passing it into the constructor
-        //    X509Certificate2 cert2 = new X509Certificate2(cert);
-
-        //    string cn = cert2.IssuerName.ToString();
-        //    string cedate = cert2.GetExpirationDateString();
-        //    string cpub = cert2.GetPublicKeyString();
-
-        //    //display the cert dialog box
-            
-        //}
-        /*
-         * HttpClient Authenticate eder.
-         * 
-         */ 
         public bool Authenticate()
         {
             try
@@ -87,7 +103,7 @@ namespace Arachni
                 return false;
             }           
          
-        }
+        }        
        
         /*
          * Servisin çalışıp çalışmadığını gösterir.
@@ -110,6 +126,7 @@ namespace Arachni
                     }
                     else if (response.StatusCode == HttpStatusCode.Unauthorized)
                     {
+                        Console.WriteLine("Hatalı username veya parola");
                         return false;
                     }
                     return false;
@@ -120,12 +137,14 @@ namespace Arachni
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ArachniSession::ArachniServiceState " + ex.Message);
+                Console.WriteLine("\nREST-Server çalışmıyor. \nHost adresini, Port numarasını ve Servisin çalışıp çalışmadığını kontrol ediniz.\n" + ex.Message);
+                //Console.WriteLine("ArachniSession::ArachniServiceState " + ex.Message);
                 return false;
             }
             
         }
 
+        /*---------------------------------------------------------------------------------------------------------*/
 
         /*
          * Arachni servisinde istenilen komutu çalıştırır.
@@ -184,10 +203,62 @@ namespace Arachni
           
         }
 
+        /*
+         * Arachni servisinde istenilen komutu çalıştırır.
+         * 
+         */
+        public string PUTExecuteCommand(string command)
+        {
+            try
+            {
+                if (Authenticate())
+                {
+                    string response = PUTTaskAsync(this.IPAddress, this.ServerPort.ToString(), command);
+                    return response;
 
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine("ArachniSession::GetExecuteCommand" + ex.Message);
+                return null;
+            }
+        }
 
         /*
-         * HttpClient GET 
+         * Arachni servisinde istenilen komutu çalıştırır.
+         * 
+         */
+        public string DeleteExecuteCommand(string command)
+        {
+            try
+            {
+                if (Authenticate())
+                {
+                    string response = DeleteTaskAsync(this.IPAddress, this.ServerPort.ToString(), command);
+                    return response;
+
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine("ArachniSession::GetExecuteCommand" + ex.Message);
+                return null;
+            }
+        }
+
+        /*
+         * HttpClient GET isteği ile istenilen komutu çalıştırır.
          * 
          */
         private string GETTaskAsync(IPAddress serviceHost, string servicePort, string command)
@@ -198,7 +269,7 @@ namespace Arachni
                     Uri serviceUrl = new Uri("http://" + serviceHost + ":" + servicePort + command);
                     Client.BaseAddress = serviceUrl;
                     var response = Client.GetAsync(serviceUrl).Result;
-
+                
                     if (response.IsSuccessStatusCode)
                     {
            
@@ -215,16 +286,19 @@ namespace Arachni
 
                 return null;
             }
+            
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("Server'a ulaşılmıyor." + ex.Message);
                 return null;
             }
         }
 
 
+        /*-------------------------------------------------------------------------------------------------------------------*/
+
         /*
-         * HttpClient POST
+         * HttpClient POST isteği ile istenilen komutu çalıştırır.
          * 
          */
         private string POSTTaskAsync(IPAddress serviceHost, string servicePort, string command,string json)
@@ -257,6 +331,80 @@ namespace Arachni
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        /*
+        * HttpClient PUT isteği ile istenilen komutu çalıştırır.
+        * 
+        */
+        private string PUTTaskAsync(IPAddress serviceHost, string servicePort, string command)
+        {
+            try
+            {
+
+                Uri serviceUrl = new Uri("http://" + serviceHost + ":" + servicePort + command);
+                Client.BaseAddress = serviceUrl;
+                var response = Client.PutAsync(serviceUrl,null).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var responseContent = response.Content;
+
+                    // by calling .Result you are synchronously reading the result
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+
+                    //Console.WriteLine(responseString);
+                    return responseString;
+                }
+
+
+
+                return null;
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine("Server'a ulaşılmıyor." + ex.Message);
+                return null;
+            }
+        }
+
+       /*
+        * HttpClient Delete isteği ile istenilen komutu çalıştırır.
+        * 
+        */
+        private string DeleteTaskAsync(IPAddress serviceHost, string servicePort, string command)
+        {
+            try
+            {
+
+                Uri serviceUrl = new Uri("http://" + serviceHost + ":" + servicePort + command);
+                Client.BaseAddress = serviceUrl;
+                var response = Client.DeleteAsync(serviceUrl).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var responseContent = response.Content;
+
+                    // by calling .Result you are synchronously reading the result
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+
+                    //Console.WriteLine(responseString);
+                    return responseString;
+                }
+
+
+
+                return null;
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine("Server'a ulaşılmıyor." + ex.Message);
                 return null;
             }
         }

@@ -19,31 +19,35 @@ namespace Arachni_REST_API.BL
             this.Scan = new ScanBL();
         }
         /*
-        * 
+        * Tarama raporunu kayıt eder (xml formatında masaüstüne) ve ScanReportDL nesnesini döndürür.
         * Retrieve a scan report
         */
         public ScanReportDL ScanReport(ArachniManager manager, string id)
         {
             id = Scan.GetID(id);
-            string report = manager.GetScanReport(id, "json");
-            ScanReportDL scanReportDL = JsonConvert.DeserializeObject<ScanReportDL>(report);
+            string report = manager.GetScanReport(id, "xml");
             SaveReport(report);
-            //report = manager.GetScanReport(id, "xml");
-            //SaveReport(report);            
+
+
+            report = manager.GetScanReport(id, "json");
+            ScanReportDL scanReportDL = JsonConvert.DeserializeObject<ScanReportDL>(report);
+            //SaveReport(report);
+           
             return scanReportDL;
         }
 
         /*
-         * Raporları Kaydet.
+         * İlgili string dizisini kaydet.
          * 
          */
-        public bool SaveReport(string json)
+        public bool SaveReport(string report)
         {
             try
             {
                 string strPath = Environment.GetFolderPath(
                            System.Environment.SpecialFolder.DesktopDirectory);
-                System.IO.File.WriteAllText(strPath + "\\Aranchi.txt", json.ToString());
+                System.IO.File.WriteAllText(strPath + "\\Aranchi.xml", report.ToString());
+                Console.WriteLine("Rapor Masaüstüne Arachni.xml olarak kayıt edildi.");
                 return true;
             }
             catch (Exception ex)

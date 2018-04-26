@@ -30,9 +30,27 @@ namespace Arachni_API.BL
         public string CreateScan(ArachniManager manager, ScanCreateDL scan)
         {
             string json = JsonConvert.SerializeObject(scan);
-            string id = manager.SetScanCreate(json);
+            string id = manager.POSTScanCreate(json);
             return id;
         }
+
+        /*
+         * Scan duraklat
+         * 
+         */
+         public string PauseScan(ArachniManager manager, string id)
+        {
+            try
+            {
+                return manager.PUTPauseScan(id);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
 
         /*
          * Gelen Scan ID'leri JSON'dan ayırarak ListScan'a ekler.
@@ -43,10 +61,11 @@ namespace Arachni_API.BL
             try
             {
                 string responseBody = manager.GetScans();
-                if (responseBody == "Unauthorized")
+                if (responseBody == "Unauthorized" || responseBody == null)
                 {
                     return null;
                 }
+                
                 else
                 {
                     JObject jObject = JObject.Parse(responseBody);

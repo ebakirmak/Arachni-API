@@ -25,6 +25,7 @@ namespace Arachni_REST_API.PL
          */
         public  void GetScanReport(ArachniManager manager, string scanID)
         {
+            
 
             ScanReportDL scanReportDL = Report.ScanReport(manager, scanID);
             Console.WriteLine("Start Date Time: " + scanReportDL.StartDatetime

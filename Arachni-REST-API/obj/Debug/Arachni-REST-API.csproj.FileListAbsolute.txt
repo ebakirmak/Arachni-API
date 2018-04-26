@@ -10,3 +10,7 @@ C:\Users\emreakirmak\Desktop\Arachni-API\Arachni-REST-API\obj\Debug\Arachni-REST
 C:\Users\emreakirmak\Desktop\Arachni-API\Arachni-REST-API\obj\Debug\Arachni-REST-API.csproj.CopyComplete
 C:\Users\emreakirmak\Desktop\Arachni-API\Arachni-REST-API\obj\Debug\Arachni-REST-API.exe
 C:\Users\emreakirmak\Desktop\Arachni-API\Arachni-REST-API\obj\Debug\Arachni-REST-API.pdb
+C:\Users\emreakirmak\Desktop\Arachni-API\Arachni-REST-API\bin\Debug\Arachni-REST-API.exe.manifest
+C:\Users\emreakirmak\Desktop\Arachni-API\Arachni-REST-API\bin\Debug\Arachni-REST-API.application
+C:\Users\emreakirmak\Desktop\Arachni-API\Arachni-REST-API\obj\Debug\Arachni-REST-API.exe.manifest
+C:\Users\emreakirmak\Desktop\Arachni-API\Arachni-REST-API\obj\Debug\Arachni-REST-API.application
