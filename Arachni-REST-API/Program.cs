@@ -24,13 +24,24 @@ namespace Arachni_REST_API
     {
         //static string id = "293bbf3bf3f81fb1de188f49e78720a0";
         static ScanBL Scan = new ScanBL();
+
+        //Server IP
+        private static string IP { get; set; }
+        //Server Port
+        private static int Port { get; set; }
+        //Username
+        private static string Username { get; set; }
+        //Password
+        private static string Password { get; set; }
+
         static void Main(string[] args)
         {
-
+            
             try
             {
-                using (
-                    ArachniSession session = new ArachniSession("ebakirmak", "1234", "206.189.12.255", 80))
+                SetIPAndPort();
+
+                using (ArachniSession session = new ArachniSession(Username,Password,IP,Port ))
                 {
                     using (ArachniManager manager = new ArachniManager(session))
                     {
@@ -38,6 +49,7 @@ namespace Arachni_REST_API
                         {
                          
                             Console.Read();
+                            return;
                         }
                             
 
@@ -92,17 +104,71 @@ namespace Arachni_REST_API
                   
         }
 
+        /*
+         * IP adresi ve port numarası girme
+         * 
+         */
+         private static void SetIPAndPort( )
+        {
+            do
+            {
+                try
+            {
+            
+                    Console.Write("IP Adresi ve Port Adresini değiştirmek istiyor musunuz?(E/H)");
+                    string selected = Console.ReadLine().ToUpper();
+                    if (selected == "E")
+                    {
+                        Console.Write("IP Adresini Giriniz: ");
+                        IP = Console.ReadLine();
+
+                        Console.Write("Port Numarasını Giriniz: ");
+                        Port = Convert.ToInt32(Console.ReadLine());
+
+                        Console.Write("Username Giriniz: ");
+                        Username = Console.ReadLine();
+
+                        Console.Write("Parola Giriniz: ");
+                        Password = Console.ReadLine();
+                        break;
+                    }
+                    else if (selected == "H")
+                    {
+                        IP = "206.189.12.255";
+                        Port = 443;
+                        Username = "ebakirmak";
+                        Password = "1234";
+                        break;
+                    }
+            
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine("Input format biçimi hatalı. Kontrol ediniz." + e.Message);
+                //throw;
+            }
+        } while (true);
+         
+           
+        }
+
+
+        /*------------------------------------------------------------------------------------------------------------------------------*/
     
         /*
          * Tarama Oluşturma
          * 
          */
-    private static void CreateScan(ArachniManager manager)
+        private static void CreateScan(ArachniManager manager)
         {
             ScanPL scanPL = new ScanPL();
             scanPL.CreateScan(manager);
         }  
 
+        /*
+         * Tarama Durdurma
+         * 
+         */ 
         private static void PauseScan(ArachniManager manager)
         {
             ScanPL scanPL = new ScanPL();
@@ -110,6 +176,10 @@ namespace Arachni_REST_API
             scanPL.PauseScan(manager,id);
         }
 
+        /*
+         * Tarama devam ettirme
+         * 
+         */ 
         private static void ResumeScan(ArachniManager manager)
         {
             ScanPL scanPL = new ScanPL();
@@ -117,6 +187,10 @@ namespace Arachni_REST_API
             scanPL.ResumeScan(manager, id);
         }
 
+        /*
+         * Tarama Silme
+         * 
+         */ 
         private static void AbortScan(ArachniManager manager)
         {
             ScanPL scanPL = new ScanPL();
@@ -161,8 +235,7 @@ namespace Arachni_REST_API
 
             }
 
-        }
-        
+        }      
        
 
         /*

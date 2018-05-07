@@ -13,9 +13,10 @@ namespace Arachni_API.BL
 {
     public class ScanBL
     {
-       private string ID { get; set; }
 
-       private List<string> ListScan { get; set; }
+        private string ID { get; set; }
+   
+        private List<string> ListScan { get; set; }
 
 
         public ScanBL()

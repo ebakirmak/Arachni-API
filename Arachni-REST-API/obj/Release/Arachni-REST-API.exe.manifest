@@ -42,26 +42,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Arachni.dll" size="10240">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Arachni.dll" size="9728">
       <assemblyIdentity name="Arachni" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>PhNoHt1awiTTWpEOVp5Wd757kc6S9vv02rJmKca33zA=</dsig:DigestValue>
+        <dsig:DigestValue>i7DBYzkkFrDXtFUY8pixnI/cteyY44PVcu0g+oEdX8k=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Arachni-REST-API.exe" size="34784">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Arachni-REST-API.exe" size="33248">
       <assemblyIdentity name="Arachni-REST-API" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>osDgB3t1vtUr5jZPtPG/EvqSvZeigSULmS0XtF62CEA=</dsig:DigestValue>
+        <dsig:DigestValue>PVCDyFNvPRZQrH+rZdsIgOr72EEwdJdk4dAO8L3GGDY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

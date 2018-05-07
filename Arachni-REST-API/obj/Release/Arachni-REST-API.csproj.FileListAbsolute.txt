@@ -1,0 +1,16 @@
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni-REST-API\bin\Release\Arachni-REST-API.exe.config
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni-REST-API\bin\Release\Arachni-REST-API.exe.manifest
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni-REST-API\bin\Release\Arachni-REST-API.application
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni-REST-API\bin\Release\Arachni-REST-API.exe
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni-REST-API\bin\Release\Arachni-REST-API.pdb
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni-REST-API\bin\Release\Arachni.dll
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni-REST-API\bin\Release\Newtonsoft.Json.dll
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni-REST-API\bin\Release\Arachni.pdb
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni-REST-API\bin\Release\Newtonsoft.Json.xml
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni-REST-API\obj\Release\Arachni-REST-API.csprojResolveAssemblyReference.cache
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni-REST-API\obj\Release\Arachni-REST-API.csproj.CoreCompileInputs.cache
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni-REST-API\obj\Release\Arachni-REST-API.exe.manifest
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni-REST-API\obj\Release\Arachni-REST-API.application
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni-REST-API\obj\Release\Arachni-REST-API.csproj.CopyComplete
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni-REST-API\obj\Release\Arachni-REST-API.exe
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni-REST-API\obj\Release\Arachni-REST-API.pdb

@@ -1,0 +1,6 @@
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni\bin\Release\Arachni.dll
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni\bin\Release\Arachni.pdb
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni\obj\Release\Arachni.csprojResolveAssemblyReference.cache
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni\obj\Release\Arachni.csproj.CoreCompileInputs.cache
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni\obj\Release\Arachni.dll
+C:\Users\emreakirmak\Desktop\Arachni\Arachni-API\Arachni\obj\Release\Arachni.pdb

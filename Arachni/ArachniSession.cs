@@ -93,7 +93,8 @@ namespace Arachni
             try
             {
                 this.Client = new HttpClient();
-                var byteArray = Encoding.ASCII.GetBytes("ebakirmak:1234");
+                //var byteArray = Encoding.ASCII.GetBytes("ebakirmak:1234");
+                var byteArray = Encoding.ASCII.GetBytes(this.Username+":"+this.Password);
                 Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                 return true;
             }
@@ -394,8 +395,9 @@ namespace Arachni
                     string responseString = responseContent.ReadAsStringAsync().Result;
 
                     //Console.WriteLine(responseString);
-                    return responseString;
+                    return "true";
                 }
+                
 
 
 

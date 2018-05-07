@@ -41,7 +41,7 @@ namespace Arachni_REST_API.PL
 
             do
             {
-                Console.Write("URL Giriniz: ");
+                Console.Write("URL Giriniz (http://test.sparker.com şeklinde): ");
                 string url = Console.ReadLine();
                 if (ControlURL(url))
                 {

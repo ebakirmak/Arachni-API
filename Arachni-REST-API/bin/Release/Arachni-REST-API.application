@@ -7,14 +7,14 @@
     <framework targetVersion="4.6" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="Arachni-REST-API.exe.manifest" size="4822">
+    <dependentAssembly dependencyType="install" codebase="Arachni-REST-API.exe.manifest" size="4821">
       <assemblyIdentity name="Arachni-REST-API.exe" version="1.0.0.2" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>1O72gwEqVJWGTb9taaaC4ouc0dWoErt0pBtsVM5yKk4=</dsig:DigestValue>
+        <dsig:DigestValue>oY4usaFVzORiRrePReDp+Byhg2YCIVLtk/iY63jwrlQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
